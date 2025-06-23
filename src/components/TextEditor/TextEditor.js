@@ -16,6 +16,8 @@ class TextEditor extends Component {
     editorState: EditorState.createEmpty(),
     textTitle: "",
     seriesList: [],
+    seriesPostTitle: "",
+    selectedSeriesId: "",
   };
 
   constructor(props) {
@@ -26,8 +28,11 @@ class TextEditor extends Component {
       seriesList = props.seriesList;
     }
     let textTitle = "";
+    let seriesPostTitle = "";
+    let selectedSeriesId = "";
     if (props.post) {
       textTitle = props.post.get("title");
+      seriesPostTitle = props.post.get("seriesPostTitle");
       const contentBlock = htmlToDraft(props.post.get("body"));
       const contentState = ContentState.createFromBlockArray(
         contentBlock.contentBlocks
@@ -36,7 +41,19 @@ class TextEditor extends Component {
     } else {
       editorState = EditorState.createEmpty();
     }
-    this.state = { editorState, textTitle: textTitle, seriesList: seriesList };
+    if (seriesPostTitle && seriesList.length > 0) {
+      const matched = seriesList.find((s) => s.title === seriesPostTitle);
+      if (matched) {
+        selectedSeriesId = matched.id;
+      }
+    }
+    this.state = {
+      editorState,
+      textTitle: textTitle,
+      seriesList: seriesList,
+      seriesPostTitle: seriesPostTitle,
+      selectedSeriesId: selectedSeriesId,
+    };
   }
 
   onSubmit = () => {
@@ -65,8 +82,25 @@ class TextEditor extends Component {
     this.setState({ selectedSeriesId });
     console.log("Selected ID:", selectedSeriesId);
   };
+  uploadImageCallBack = (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // return fetch("https://your-server.com/api/upload", {
+    //   method: "POST",
+    //   body: formData,
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     // data.url là URL server trả về
+    //     return { data: { link: data.url } };
+    //   });
+    return "https://i1-vnexpress.vnecdn.net/2025/06/12/OPEN-PC-1749726315-8703-1749726413.png?w=0&h=0&q=100&dpr=1&fit=crop&s=EdGUC04-LVwjGwm67Ai2TQ";
+  };
+
   render() {
-    const { editorState, selectedSeriesId, seriesList } = this.state;
+    const { editorState, seriesPostTitle, seriesList } = this.state;
+    console.log("seriesPostTitle, ", seriesPostTitle);
     return (
       <div className={cx("text-editor")}>
         <div className="my-3">
@@ -76,21 +110,16 @@ class TextEditor extends Component {
           <select
             id="topic-select"
             className="form-control mt-1"
-            value={selectedSeriesId}
+            value={this.state.selectedSeriesId || ""}
             onChange={this.onSeriesChange}
           >
             <option value="">-- Select Series --</option>
-            {seriesList.map((series, idx) => (
-              <option key={idx} value={series.id}>
+            {seriesList.map((series) => (
+              <option key={series.id} value={series.id}>
                 {series.title}
               </option>
             ))}
           </select>
-          {/* {selectedTopic && (
-            <p className="mt-2">
-              Đã chọn: <strong>{selectedTopic}</strong>
-            </p>
-          )} */}
         </div>
         <Input
           value={this.state.textTitle}
@@ -102,6 +131,13 @@ class TextEditor extends Component {
           wrapperClassName="demo-wrapper"
           editorClassName="demo-editor"
           onEditorStateChange={this.onEditorStateChange}
+          toolbar={{
+            image: {
+              uploadCallback: this.uploadImageCallBack,
+              previewImage: true,
+              alt: { present: true, mandatory: false },
+            },
+          }}
         />
 
         <div className={cx("editor-button")}>
@@ -127,11 +163,3 @@ class TextEditor extends Component {
 }
 
 export default TextEditor;
-
-/*
-preview code
-<textarea
-  disabled
-  className="demo-content"
-  value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-/> */

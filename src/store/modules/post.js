@@ -47,6 +47,7 @@ export default handleActions(
       onSuccess: (state, action) => {
         const { data: content } = action.payload;
         console.log("GET_POST_LIST onSuccess");
+        console.log("Data: ", action.payload);
         return state.set("posts", fromJS(content));
       },
       onFailure: (state, action) => {
@@ -63,6 +64,7 @@ export default handleActions(
       onSuccess: (state, action) => {
         const { data: content } = action.payload;
         console.log("GET_POST onSuccess");
+        console.log("Data: ", action.payload);
         return state.set("post", fromJS(content));
       },
       onFailure: (state, action) => {
@@ -79,6 +81,7 @@ export default handleActions(
       onSuccess: (state, action) => {
         const { id } = action.payload.data;
         console.log("WRITE_POST onSuccess");
+        console.log("Data: ", action.payload);
         return state.set("postId", id);
       },
       onFailure: (state, action) => {
@@ -90,6 +93,7 @@ export default handleActions(
       type: DELETE_POST,
       onSuccess: (state, action) => {
         console.log("DELETE_POST onSuccess");
+        console.log("Data: ", action.payload);
         return state;
       },
       onFailure: (state, action) => {
@@ -103,6 +107,7 @@ export default handleActions(
         const { data: content } = action.payload;
         console.log("GET_COMMENT_LIST onSuccess");
         const comments = content === "" ? List() : fromJS(content);
+        console.log("Data: ", action.payload);
         return state.set("comments", comments);
       },
       onFailure: (state, action) => {
@@ -118,6 +123,7 @@ export default handleActions(
       type: WRITE_COMMENT,
       onSuccess: (state, action) => {
         const { data: content } = action.payload;
+        console.log("Data: ", action.payload);
         return state.set(
           "comments",
           state.get("comments").push(fromJS(content))
@@ -133,6 +139,7 @@ export default handleActions(
       onSuccess: (state, action) => {
         const { data: content } = action.payload;
         console.log("GET_SERIRES_POST_LIST onSuccess");
+        console.log("Data: ", action.payload);
         return state.set("seriesList", fromJS(content));
       },
       onFailure: (state, action) => {
@@ -149,7 +156,7 @@ export default handleActions(
       onSuccess: (state, action) => {
         const { data: content } = action.payload;
         console.log("GET_DETAIL_SERIES onSuccess");
-        console.log(content);
+        console.log("Data: ", action.payload);
         const detail = { ...content };
         const posts = detail.posts || [];
         return state
@@ -168,9 +175,8 @@ export default handleActions(
     ...pender({
       type: WRITE_SERIES,
       onSuccess: (state, action) => {
-        const { data: content } = action.payload;
         console.log("WRITE_SERIES onSuccess");
-        console.log(content);
+        console.log("Data: ", action.payload);
         return state;
       },
       onFailure: (state, action) => {

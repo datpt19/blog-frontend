@@ -1,14 +1,12 @@
-import React, { Fragment } from 'react';
+import React, { Fragment } from "react";
 
-import styles from './PostPreview.scss';
-import classNames from 'classnames/bind';
-import moment from 'moment';
-import renderHTML from 'react-render-html';
-import { Link } from 'react-router-dom'
-
+import styles from "./PostPreview.scss";
+import classNames from "classnames/bind";
+import moment from "moment";
+import renderHTML from "react-render-html";
+import { Link } from "react-router-dom";
 
 const cx = classNames.bind(styles);
-
 
 const PostPreview = ({ post }) => {
   if (post === undefined) {
@@ -16,7 +14,7 @@ const PostPreview = ({ post }) => {
   }
   let postBody = post.get("body");
   if (postBody.length > 300) {
-    postBody = postBody.substring(0, 300) + '...';
+    postBody = postBody.substring(0, 300) + "...";
   }
 
   return (
@@ -29,12 +27,24 @@ const PostPreview = ({ post }) => {
           Posted by {post.get("createdBy")}
           <span> {`  `} </span>
           {moment(post.get("lastModifiedDate")).format("lll")}
+          {post.get("seriesPostTitle") &&
+            post.get("seriesPostTitle").trim() !== "" && (
+              <div className={cx("post-series")}>
+                Series:&nbsp;
+                <Link
+                  to={`/series/${post.get("seriesPostId")}`}
+                  className={cx("series-link")}
+                >
+                  {post.get("seriesPostTitle")}
+                </Link>
+              </div>
+            )}
         </div>
         <hr />
       </div>
-      <div className={cx('post-body')}>{renderHTML(postBody)}</div>
+      <div className={cx("post-body")}>{renderHTML(postBody)}</div>
     </Fragment>
-  )
+  );
 };
 
 export default PostPreview;

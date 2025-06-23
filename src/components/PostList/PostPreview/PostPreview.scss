@@ -1,3 +1,41 @@
 .post-body {
   font-size: 1.2rem;
 }
+.post-link {
+  display: block; /* hoặc inline-block nếu không muốn chiếm nguyên dòng */
+  margin: 8px 0;
+  color: #2c3e50;
+  text-decoration: none;
+  font-size: 1rem;
+
+  &:hover {
+    color: #1e90ff;
+    text-decoration: underline;
+  }
+}
+
+.series-title {
+  color: #888;
+  font-weight: bold;
+}
+
+.post-title {
+  color: #000;
+}
+
+.post-series {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.series-link {
+  color: #1e90ff;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+    color: #0073e6;
+  }
+}
